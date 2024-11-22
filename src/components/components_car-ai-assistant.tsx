@@ -1,30 +1,69 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useChat } from 'ai/react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { CarInfo } from './components_car-info'
-import { Loader2 } from 'lucide-react'
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { CarInfo } from './components_car-info';
+import { Loader2 } from 'lucide-react';
 
 export function CarAIAssistant() {
-  const [vin, setVin] = useState('')
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
-    api: '/api/chat',
-    onResponse: (response) => {
-      if (response.status === 429) {
-        console.error('Rate limit exceeded')
-        // Handle rate limiting (e.g., show an error message to the user)
+  const [vin, setVin] = useState('');
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const callGoogleGenerativeAPI = async (vin: string, userQuery: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Prepare the query
+      const payload = {
+        data: {
+          vin,
+          userQuery,
+        },
+      };
+
+      // Make the API request
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch AI response');
       }
-    },
-  })
+
+      const data = await response.text();
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'user', content: userQuery },
+        { role: 'assistant', content: data },
+      ]);
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleVinSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleSubmit(e, { data: { vin } })
-  }
+    e.preventDefault();
+    const userQuery = `My VIN number is ${vin}. What are my vehicle specifications?`;
+    callGoogleGenerativeAPI(vin, userQuery);
+  };
+
+  const handleMessageSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input) return;
+    callGoogleGenerativeAPI(vin, input);
+    setInput(''); // Clear the input field
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -48,7 +87,7 @@ export function CarAIAssistant() {
         <ScrollArea className="h-[400px] w-full pr-4">
           {error && (
             <div className="text-red-500 mb-4">
-              An error occurred. Please try again.
+              An error occurred: {error}
             </div>
           )}
           {messages.map((message, index) => (
@@ -59,10 +98,10 @@ export function CarAIAssistant() {
         </ScrollArea>
       </CardContent>
       <CardFooter>
-        <form onSubmit={handleSubmit} className="flex w-full space-x-2">
+        <form onSubmit={handleMessageSubmit} className="flex w-full space-x-2">
           <Input
             value={input}
-            onChange={handleInputChange}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question about your car..."
             className="flex-grow"
             aria-label="Ask a question about your car"
@@ -73,6 +112,5 @@ export function CarAIAssistant() {
         </form>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
