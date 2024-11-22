@@ -1,0 +1,74 @@
+[
+    {
+        "vin": "1HGCM82633A123456",
+        "vehicle_details": {
+            "make": "Honda",
+            "model": "Accord",
+            "year": 2014,
+            "engine": "Hybrid"
+        },
+        "required_parts": ["air filter", "brake pads"],
+        "suppliers": [
+            {"part": "battery", "supplier": "AutoZone", "price": "$22"},
+            {"part": "air filter", "supplier": "Advance Auto Parts", "price": "$96"},
+            {"part": "spark plugs", "supplier": "O'Reilly Auto Parts", "price": "$53"}
+        ]
+    },
+    {
+        "vin": "2C4RC1BG6GR123456",
+        "vehicle_details": {
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2017,
+            "engine": "Hybrid"
+        },
+        "required_parts": ["alternator", "brake pads"],
+        "suppliers": [
+            {"part": "battery", "supplier": "NAPA Auto Parts", "price": "$27"},
+            {"part": "spark plugs", "supplier": "AutoZone", "price": "$22"}
+        ]
+    },
+    {
+        "vin": "1FTFW1EF5EFA12345",
+        "vehicle_details": {
+            "make": "Ford",
+            "model": "F-150",
+            "year": 2019,
+            "engine": "I4"
+        },
+        "required_parts": ["oil filter", "alternator", "brake pads", "air filter"],
+        "suppliers": [
+            {"part": "spark plugs", "supplier": "NAPA Auto Parts", "price": "$167"},
+            {"part": "air filter", "supplier": "Advance Auto Parts", "price": "$27"}
+        ]
+    },
+    {
+        "vin": "5N1AR2MN0FC123456",
+        "vehicle_details": {
+            "make": "Chevrolet",
+            "model": "Equinox",
+            "year": 2002,
+            "engine": "Hybrid"
+        },
+        "required_parts": ["alternator", "brake pads"],
+        "suppliers": [
+            {"part": "oil filter", "supplier": "Advance Auto Parts", "price": "$170"},
+            {"part": "alternator", "supplier": "O'Reilly Auto Parts", "price": "$170"}
+        ]
+    },
+    {
+        "vin": "3GNAL3EK8FS123456",
+        "vehicle_details": {
+            "make": "Nissan",
+            "model": "Altima",
+            "year": 2017,
+            "engine": "Hybrid"
+        },
+        "required_parts": ["oil filter", "alternator", "battery"],
+        "suppliers": [
+            {"part": "brake pads", "supplier": "O'Reilly Auto Parts", "price": "$27"},
+            {"part": "air filter", "supplier": "NAPA Auto Parts", "price": "$53"},
+            {"part": "battery", "supplier": "AutoZone", "price": "$167"}
+        ]
+    }
+]
