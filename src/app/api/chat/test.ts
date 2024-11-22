@@ -1,19 +1,19 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI("AIzaSyCSOtHMDIYNOJYuFBXTUOWAA7_s9Lxpe2w");
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const dataset = require("./data.json");
+const dataset = require("../../data.json");
 
-async function generateContent() {
-  try {x
+export async function generateContent(query: string): Promise<string> {
+  try {
     const query = "My vin number is 1HGCM82633A123456 and my air quality in the car is bad, how do i fix this"
     const prompt = `Given this dataset: ${JSON.stringify(dataset)} \n ${query}\n What are my vehicle specifications`;
     const result = await model.generateContent(prompt);
     console.log(result.response.text());
-  } catch (error) {
+    return result.response.text();
+  } catch (error:any) {
     console.error("Error:", error.message);
+    throw new Error(error.message); // Forward the error to the caller
   }
 }
 
-// Call the async function
-generateContent();
